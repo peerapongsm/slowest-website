@@ -8,11 +8,13 @@ import {
   tick,
   tap as tapScene,
   registerVisit,
+  progressState,
   SCENE_DURATIONS_MS,
   SCENE_ORDER,
   type ScriptState,
   type SceneId,
 } from "@/lib/script";
+import { SoundEngine, getSoundPref, setSoundPref, progressBlipKind } from "@/lib/sound";
 import { getStats, recordCertReached, type LocalStats } from "@/lib/stats";
 import { ConnectingScene } from "@/components/ConnectingScene";
 import { ProgressScene } from "@/components/ProgressScene";
@@ -22,6 +24,7 @@ import { AdScene } from "@/components/AdScene";
 import { StallScene } from "@/components/StallScene";
 import { CertScene } from "@/components/CertScene";
 import { ReloadBanner } from "@/components/ReloadBanner";
+import { SoundToggle } from "@/components/SoundToggle";
 
 declare global {
   interface Window {
@@ -51,14 +54,32 @@ export default function Home() {
   const [reloadCount, setReloadCount] = useState(0);
   const [certResult, setCertResult] = useState<CertResult | null>(null);
   const [stats, setStats] = useState<LocalStats>({ certCount: 0, totalWaitMs: 0 });
+  const [soundOn, setSoundOn] = useState(false);
 
   const totalElapsedRef = useRef(0);
   const lastTimeRef = useRef<number | null>(null);
   const certRecordedRef = useRef(false);
+  const soundRef = useRef<SoundEngine | null>(null);
+  const prevProgressRef = useRef<number | null>(null);
+
+  const soundEngine = () => {
+    if (!soundRef.current) soundRef.current = new SoundEngine();
+    return soundRef.current;
+  };
 
   useEffect(() => {
     setReloadCount(registerVisit(window.sessionStorage));
     setStats(getStats(window.localStorage));
+  }, []);
+
+  // Restore sound preference. Browsers require a user gesture before audio,
+  // so a remembered "on" arms a one-time pointerdown listener to resume.
+  useEffect(() => {
+    if (!getSoundPref(window.localStorage)) return;
+    setSoundOn(true);
+    const resume = () => soundEngine().enable();
+    window.addEventListener("pointerdown", resume, { once: true });
+    return () => window.removeEventListener("pointerdown", resume);
   }, []);
 
   // Dev/screenshot aid only: `?scene=cert` jumps straight to a scene for visual
@@ -88,6 +109,25 @@ export default function Home() {
 
   const scene = currentScene(scriptState);
 
+  // Scene soundtrack (engine remembers the scene even while muted).
+  useEffect(() => {
+    soundEngine().setScene(scene);
+  }, [scene]);
+
+  // Scene 2: blip when the progress bar's keyframe jumps (up or, funnier, down).
+  useEffect(() => {
+    if (scene !== "progress") {
+      prevProgressRef.current = null;
+      return;
+    }
+    const { value } = progressState(scriptState.elapsedInSceneMs, SCENE_DURATIONS_MS.progress);
+    const prev = prevProgressRef.current;
+    prevProgressRef.current = value;
+    if (prev === null) return;
+    const kind = progressBlipKind(prev, value);
+    if (kind) soundRef.current?.progressBlip(kind);
+  }, [scene, scriptState.elapsedInSceneMs]);
+
   useEffect(() => {
     if (scene === "cert" && !certRecordedRef.current) {
       certRecordedRef.current = true;
@@ -105,12 +145,24 @@ export default function Home() {
     }
   }, [scene, scriptState.cheated]);
 
-  const handleTap = () => setScriptState((s) => tapScene(s));
+  const handleTap = () => {
+    soundRef.current?.tapBlip(scriptState.stallTaps + 1);
+    setScriptState((s) => tapScene(s));
+  };
+
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setSoundPref(window.localStorage, next);
+    if (next) soundEngine().enable();
+    else soundRef.current?.disable();
+  };
+
   const sceneNumber = SCENE_ORDER.indexOf(scene) + 1;
 
   return (
     <main>
-      <Header />
+      <Header soundOn={soundOn} onToggleSound={toggleSound} />
       <ReloadBanner reloadCount={reloadCount} />
 
       {scene === "connecting" && (
@@ -149,7 +201,7 @@ export default function Home() {
   );
 }
 
-function Header() {
+function Header({ soundOn, onToggleSound }: { soundOn: boolean; onToggleSound: () => void }) {
   return (
     <header className="app-header">
       <h1>🐢 เว็บที่ช้าที่สุดในประเทศไทย</h1>
@@ -158,6 +210,7 @@ function Header() {
         <Link href="/method/" className="btn btn-outline btn-sm">
           คำสารภาพ (/method)
         </Link>
+        <SoundToggle on={soundOn} onToggle={onToggleSound} />
       </div>
     </header>
   );
