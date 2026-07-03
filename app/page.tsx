@@ -29,6 +29,18 @@ declare global {
   }
 }
 
+// Mirrors each scene's own scene-titlebar-file label, for the desktop taskbar's
+// "running program" pill (decorative only — desktop viewport, ≥1024px).
+const SCENE_FILE_LABELS: Record<SceneId, string> = {
+  connecting: "connect.exe",
+  progress: "loading.dll",
+  landscape: "thai_landscape.jpg",
+  fontload: "font-loader.woff2",
+  ad: "ad-server",
+  stall: "almost-done.exe",
+  cert: "คุณมาถึงแล้ว",
+};
+
 interface CertResult {
   elapsedMs: number;
   date: Date;
@@ -127,6 +139,12 @@ export default function Home() {
       <p className="scene-footer">ฉากที่ {sceneNumber} จาก 7</p>
 
       <Footer />
+
+      <div className="desktop-taskbar" aria-hidden="true">
+        <span className="taskbar-start bevel-raised">🐢 เริ่ม</span>
+        <span className="taskbar-task bevel-sunken">{SCENE_FILE_LABELS[scene]}</span>
+        <span className="taskbar-clock bevel-sunken">ฉากที่ {sceneNumber}/7</span>
+      </div>
     </main>
   );
 }
