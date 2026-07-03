@@ -1,0 +1,375 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Noto Sans Thai", "Sarabun", system-ui, -apple-system, sans-serif;
+  background: #0c0e14;
+  color: #e8e6da;
+  line-height: 1.6;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+main {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+header.app-header {
+  text-align: center;
+  padding-top: 12px;
+}
+
+header.app-header h1 {
+  font-size: 1.25rem;
+  margin: 0 0 4px;
+}
+
+header.app-header p {
+  margin: 0;
+  color: #9a97a8;
+  font-size: 0.8rem;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: #23263a;
+  color: #e8e6da;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn.btn-outline {
+  background: transparent;
+  border: 1.5px solid #3a3d54;
+  color: #c7c4d8;
+}
+
+.btn.btn-primary {
+  background: linear-gradient(135deg, #ff8a3d, #e5502a);
+  color: #1c0f06;
+}
+
+.btn.btn-sm {
+  padding: 7px 12px;
+  font-size: 0.8rem;
+}
+
+.btn:disabled {
+  background: #23263a;
+}
+
+footer.app-footer {
+  text-align: center;
+  padding: 24px 16px 8px;
+  font-size: 0.75rem;
+  color: #5c5a6c;
+}
+
+/* --- scene shell (retro loading-window vibe) --- */
+
+.scene-card {
+  background: #14172400;
+  border: 1px solid #2c2f45;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.scene-titlebar {
+  background: linear-gradient(90deg, #2a2d63, #1a1c3a);
+  color: #d8d6ec;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  letter-spacing: 0.02em;
+}
+
+.scene-body {
+  background: #14162080;
+  padding: 22px 16px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+
+.scene-footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: #55536a;
+}
+
+/* --- scene 1: connecting --- */
+
+.connecting-lines {
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 0.95rem;
+  color: #7dffb0;
+  white-space: pre-wrap;
+  min-height: 140px;
+}
+
+.connecting-cursor {
+  display: inline-block;
+  width: 0.55em;
+  background: #7dffb0;
+  animation: blink 1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connecting-cursor {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* --- scene 2: progress --- */
+
+.progress-track {
+  width: 100%;
+  height: 22px;
+  border-radius: 999px;
+  background: #1c1e2e;
+  border: 1px solid #383a52;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff8a3d, #ffce54);
+  transition: width 0.6s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-fill {
+    transition: none;
+  }
+}
+
+.progress-pct {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-message {
+  text-align: center;
+  color: #b7b4c8;
+  font-size: 0.88rem;
+  min-height: 1.4em;
+}
+
+/* --- scene 3: landscape (interlaced) --- */
+
+.landscape-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.landscape-svg {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  border-radius: 8px;
+  background: #10121c;
+}
+
+/* --- scene 4: font load (tofu) --- */
+
+.tofu-text {
+  font-size: 1.15rem;
+  text-align: center;
+  line-height: 1.9;
+}
+
+/* --- scene 5: ad --- */
+
+.ad-card {
+  border: 2px dashed #ff8a3d;
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  background: #1c1608;
+}
+
+.ad-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: #ffce54;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.ad-headline {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.ad-body {
+  color: #cfcbd8;
+  font-size: 0.9rem;
+  margin: 0 0 14px;
+}
+
+.ad-countdown {
+  font-size: 0.85rem;
+  color: #9a97a8;
+  margin-top: 10px;
+}
+
+/* --- scene 6: stall --- */
+
+.stall-zone {
+  border-radius: 12px;
+  border: 1px dashed #3a3d54;
+  padding: 30px 16px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.stall-pct {
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.stall-hint {
+  font-size: 0.78rem;
+  color: #7a7890;
+  min-height: 1.4em;
+  margin-top: 10px;
+}
+
+.stall-spin {
+  display: inline-block;
+  animation: spin 2.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stall-spin {
+    animation: none;
+  }
+}
+
+/* --- scene 7: cert --- */
+
+.cert-sentence {
+  font-size: 1.1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.cert-preview {
+  border: 2px solid #ffce54;
+  border-radius: 10px;
+  padding: 18px 14px;
+  text-align: center;
+  background: #16121c;
+}
+
+.cert-preview h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  color: #ffce54;
+}
+
+.cert-preview p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+.cert-stamp {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #ff9d7a;
+}
+
+.stats-panel {
+  border: 1px solid #2c2f45;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  color: #b7b4c8;
+  text-align: center;
+}
+
+/* --- reload banner --- */
+
+.reload-banner {
+  border: 1px solid #55425c;
+  background: #241522;
+  color: #e4b8de;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+/* --- method page --- */
+
+.method-content h2 {
+  font-size: 1.05rem;
+  margin-top: 24px;
+}
+
+.method-content p,
+.method-content li {
+  font-size: 0.92rem;
+  color: #cfcbd8;
+}
+
+.method-content ul {
+  padding-left: 20px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
