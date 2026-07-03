@@ -1,6 +1,7 @@
 "use client";
 
 import { progressState } from "@/lib/script";
+import { TitlebarButtons } from "@/components/TitlebarButtons";
 
 interface Props {
   elapsedMs: number;
@@ -13,8 +14,11 @@ export function ProgressScene({ elapsedMs, durationMs }: Props) {
   return (
     <div className="scene-card">
       <div className="scene-titlebar">
-        <span>ฉากที่ 2 / 7</span>
-        <span>loading.dll</span>
+        <span className="scene-titlebar-text">
+          <span>ฉากที่ 2 / 7</span>
+          <span className="scene-titlebar-file">loading.dll</span>
+        </span>
+        <TitlebarButtons />
       </div>
       <div className="scene-body">
         <div className="progress-pct">{value}%</div>

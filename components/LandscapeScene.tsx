@@ -1,5 +1,7 @@
 "use client";
 
+import { TitlebarButtons } from "@/components/TitlebarButtons";
+
 const ROWS = 16;
 const VIEW_W = 380;
 const VIEW_H = 200;
@@ -44,8 +46,11 @@ export function LandscapeScene({ elapsedMs, durationMs }: Props) {
   return (
     <div className="scene-card">
       <div className="scene-titlebar">
-        <span>ฉากที่ 3 / 7</span>
-        <span>thai_landscape.jpg (interlaced)</span>
+        <span className="scene-titlebar-text">
+          <span>ฉากที่ 3 / 7</span>
+          <span className="scene-titlebar-file">thai_landscape.jpg (interlaced)</span>
+        </span>
+        <TitlebarButtons />
       </div>
       <div className="scene-body">
         <div className="landscape-wrap">

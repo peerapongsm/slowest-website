@@ -1,5 +1,7 @@
 "use client";
 
+import { TitlebarButtons } from "@/components/TitlebarButtons";
+
 const SENTENCE = "ระบบกำลังโหลดฟอนต์ไทยที่ถูกต้อง กรุณารอสักครู่ (อีกสักครู่ อีกนิดเดียว จริงๆ)";
 const WORDS = SENTENCE.split(" ");
 
@@ -23,11 +25,17 @@ export function FontLoadScene({ elapsedMs, durationMs }: Props) {
   return (
     <div className="scene-card">
       <div className="scene-titlebar">
-        <span>ฉากที่ 4 / 7</span>
-        <span>font-loader.woff2</span>
+        <span className="scene-titlebar-text">
+          <span>ฉากที่ 4 / 7</span>
+          <span className="scene-titlebar-file">font-loader.woff2</span>
+        </span>
+        <TitlebarButtons />
       </div>
       <div className="scene-body">
         <p className="tofu-text">{rendered}</p>
+        <div className="fontload-marquee" aria-hidden="true">
+          <div className="fontload-marquee-bar" />
+        </div>
       </div>
       <div className="scene-footer">
         คำที่โหลดแล้ว {wordsRevealed}/{WORDS.length}

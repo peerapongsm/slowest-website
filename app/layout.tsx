@@ -1,5 +1,27 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Mono, VT323, Sarabun } from "next/font/google";
 import "./globals.css";
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
+});
+
+const vt323 = VT323({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-vt323",
+  display: "swap",
+});
+
+const sarabun = Sarabun({
+  subsets: ["thai", "latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sarabun",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "เว็บที่ช้าที่สุดในประเทศไทย",
@@ -9,7 +31,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="th">
+    <html lang="th" className={`${ibmPlexMono.variable} ${vt323.variable} ${sarabun.variable}`}>
       <head>
         <script
           defer

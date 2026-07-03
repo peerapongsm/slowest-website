@@ -11,6 +11,7 @@ import {
   SCENE_DURATIONS_MS,
   SCENE_ORDER,
   type ScriptState,
+  type SceneId,
 } from "@/lib/script";
 import { getStats, recordCertReached, type LocalStats } from "@/lib/stats";
 import { ConnectingScene } from "@/components/ConnectingScene";
@@ -46,6 +47,19 @@ export default function Home() {
   useEffect(() => {
     setReloadCount(registerVisit(window.sessionStorage));
     setStats(getStats(window.localStorage));
+  }, []);
+
+  // Dev/screenshot aid only: `?scene=cert` jumps straight to a scene for visual
+  // review. No-op for normal visits (no query param), never alters SCENE_ORDER
+  // or timing — it only seeks the same state machine to a later index.
+  useEffect(() => {
+    const sceneParam = new URLSearchParams(window.location.search).get("scene");
+    if (sceneParam && (SCENE_ORDER as string[]).includes(sceneParam)) {
+      const idx = SCENE_ORDER.indexOf(sceneParam as SceneId);
+      const duration = SCENE_DURATIONS_MS[sceneParam as SceneId];
+      const midway = Number.isFinite(duration) ? duration / 2 : 0;
+      setScriptState((s) => ({ ...s, sceneIndex: idx, elapsedInSceneMs: midway }));
+    }
   }, []);
 
   useEffect(() => {
